@@ -87,10 +87,10 @@ namespace ViewModel
                 {
                     var hvar1 = tcClient.CreateVariableHandle("GVL_WCS.C101_ToWCS.UPI1");
                     PlcValue = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
-                }
+                }  
                 #endregion
 
-                PlcValue += PlcValue + "/-/";
+                PlcValue += PlcValue + "/-/-/";
             }
             catch (Exception ex)
             {
