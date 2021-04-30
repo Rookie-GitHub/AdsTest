@@ -62,11 +62,11 @@ namespace ViewModel
             tcClient = new TcAdsClient();
             try
             {
-                IP = "172.18.212.30.1.1";
+                IP = "172.18.226.186.1.1";
                 Port = 851;
                 tcClient.Connect(IP, Port);
 
-                Upi = tcClient.AddDeviceNotification("GVL_WCS.C101_ToWCS.UPI1", dataStream, AdsTransMode.OnChange, 100, 0, null);
+                Upi = tcClient.AddDeviceNotification("GVL_WCS.C47_FrWCS.UPI", dataStream, AdsTransMode.OnChange, 100, 0, null);
 
                 tcClient.AdsNotification += new AdsNotificationEventHandler(tcClient_OnNotification);
             }
@@ -85,12 +85,12 @@ namespace ViewModel
                 #region plcUpi
                 if (e.NotificationHandle == Upi)
                 {
-                    var hvar1 = tcClient.CreateVariableHandle("GVL_WCS.C101_ToWCS.UPI1");
-                    PlcValue = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
-                }  
+                    var hvar1 = tcClient.CreateVariableHandle("GVL_WCS.C47_FrWCS.UPI");
+                    var UpiValue = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
+                    PlcValue += UpiValue + "/-/-/";
+                }
                 #endregion
 
-                PlcValue += PlcValue + "/-/-/";
             }
             catch (Exception ex)
             {

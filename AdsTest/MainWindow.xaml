@@ -16,7 +16,7 @@
         <Label Content="Port" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="265,50,0,0" Height="30"/>
         <!--<StackPanel DataContext="{Binding VM_MainWindow}">-->
         <Button Content="Connect" Command="{Binding ConnectCommand}"  CommandParameter="{Binding RelativeSource={x:Static RelativeSource.Self}}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="550,50,0,0" Height="30"/>
-        <TextBox HorizontalAlignment="Left" Height="165" TextWrapping="Wrap" Text="{Binding PlcValue,Mode=TwoWay}" VerticalAlignment="Top" Width="151" Margin="25,150,0,0"/>
+        <TextBox HorizontalAlignment="Left" Height="246" TextWrapping="Wrap" Text="{Binding PlcValue,Mode=TwoWay}" VerticalAlignment="Top" Width="734" Margin="25,150,0,0"/>
         <!--</StackPanel>-->
     </Grid>
 </Window>
