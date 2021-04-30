@@ -78,7 +78,7 @@ namespace ViewModel
 
                 Upi = tcClient.AddDeviceNotification("GVL_WCS.C47_FrWCS.UPI", dataStream, AdsTransMode.OnChange, 100, 0, null);
 
-                UpiDataOk = tcClient.AddDeviceNotification("GVL_WCS.C47_FrWCS.DataOK", dataStream, AdsTransMode.OnChange, 100, 0, null);
+                UpiDataOk = tcClient.AddDeviceNotification("GVL_WCS.C47_ToWCS.UPI_OK", dataStream, AdsTransMode.OnChange, 100, 0, null);
 
                 tcClient.AdsNotification += new AdsNotificationEventHandler(tcClient_OnNotification);
             }
@@ -106,8 +106,8 @@ namespace ViewModel
                 #region UpiDataOk
                 if (e.NotificationHandle == UpiDataOk)
                 {
-                    var hvar1 = tcClient.CreateVariableHandle("GVL_WCS.C47_FrWCS.DataOK");
-                    var UpiDataOk = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
+                    var hvar2 = tcClient.CreateVariableHandle("GVL_WCS.C47_ToWCS.UPI_OK");
+                    var UpiDataOk = (bool)(tcClient.ReadAny(hvar2, typeof(bool)));
                     PlcDataOkValue += UpiDataOk + "/-/-/";
                 }
                 #endregion
