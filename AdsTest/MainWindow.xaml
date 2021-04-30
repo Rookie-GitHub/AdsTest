@@ -14,12 +14,10 @@
         <TextBox Name="TB_Port" Text="{Binding Port,Mode=TwoWay}" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Margin="300,50,0,0" TextAlignment="Center" FontSize="15" VerticalContentAlignment="Center"/>
 
         <Label Content="Port" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="265,50,0,0" Height="30"/>
-        <!--<StackPanel DataContext="{Binding VM_MainWindow}">-->
         <Button Content="Connect" Command="{Binding ConnectCommand}"  CommandParameter="{Binding RelativeSource={x:Static RelativeSource.Self}}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="550,50,0,0" Height="30"/>
         <TextBox HorizontalAlignment="Left" Height="246" TextWrapping="Wrap" Text="{Binding PlcValue,Mode=TwoWay}" VerticalAlignment="Top" Width="274" Margin="25,150,0,0"/>
         <TextBox HorizontalAlignment="Left" Height="246" TextWrapping="Wrap" Text="{Binding PlcDataOkValue,Mode=TwoWay}" VerticalAlignment="Top" Width="283" Margin="342,150,0,0"/>
         <Button Content="Clear" Command="{Binding ClearCommand}" CommandParameter="Upi" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="112,430,0,0"/>
         <Button Content="Clear" Command="{Binding ClearCommand}" CommandParameter="DataOk" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="446,430,0,0"/>
-        <!--</StackPanel>-->
     </Grid>
 </Window>
