@@ -17,6 +17,8 @@ namespace ViewModel
 
         int Upi;
 
+        int UpiDataOk;
+
         private string _IP;
         public string IP
         {
@@ -40,6 +42,14 @@ namespace ViewModel
             set { _PlcValue = value; OnPropertyChanged(); }
         }
 
+        private string _PlcDataOkValue;
+
+        public string PlcDataOkValue
+        {
+            get { return _PlcDataOkValue; }
+            set { _PlcDataOkValue = value; OnPropertyChanged(); }
+        }
+        
         public VM_MainWindow()
         {
 
@@ -68,6 +78,8 @@ namespace ViewModel
 
                 Upi = tcClient.AddDeviceNotification("GVL_WCS.C47_FrWCS.UPI", dataStream, AdsTransMode.OnChange, 100, 0, null);
 
+                UpiDataOk = tcClient.AddDeviceNotification("GVL_WCS.C47_FrWCS.DataOK", dataStream, AdsTransMode.OnChange, 100, 0, null);
+
                 tcClient.AdsNotification += new AdsNotificationEventHandler(tcClient_OnNotification);
             }
             catch (Exception ex)
@@ -91,6 +103,14 @@ namespace ViewModel
                 }
                 #endregion
 
+                #region UpiDataOk
+                if (e.NotificationHandle == UpiDataOk)
+                {
+                    var hvar1 = tcClient.CreateVariableHandle("GVL_WCS.C47_FrWCS.DataOK");
+                    var UpiDataOk = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
+                    PlcDataOkValue += UpiDataOk + "/-/-/";
+                }
+                #endregion
             }
             catch (Exception ex)
             {
