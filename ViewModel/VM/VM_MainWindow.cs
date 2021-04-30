@@ -21,6 +21,9 @@ namespace ViewModel
 
         int parameterTwo;
 
+        string TypeOneValue;
+        string TypeTwoValue;
+
         private string _IP;
         public string IP
         {
@@ -42,13 +45,6 @@ namespace ViewModel
             get { return _ParaOne; }
             set { _ParaOne = value; OnPropertyChanged(); }
         }
-        private string _ParaTwo;
-
-        public string ParaTwo
-        {
-            get { return _ParaTwo; }
-            set { _ParaTwo = value; OnPropertyChanged(); }
-        }
 
         private string _parameterOneValue;
 
@@ -58,13 +54,6 @@ namespace ViewModel
             set { _parameterOneValue = value; OnPropertyChanged(); }
         }
 
-        private string _parameterTwoValue;
-
-        public string ParameterTwoValue
-        {
-            get { return _parameterTwoValue; }
-            set { _parameterTwoValue = value; OnPropertyChanged(); }
-        }
 
         public VM_MainWindow()
         {
@@ -88,10 +77,9 @@ namespace ViewModel
             tcClient = new TcAdsClient();
             try
             {
-                //IP = "172.18.226.186.1.1";
-                //Port = 851;
+                IP = "172.18.226.186.1.1";
+                Port = 851;
                 tcClient.Connect(IP, Port);
-
             }
             catch (Exception ex)
             {
@@ -121,6 +109,10 @@ namespace ViewModel
             DependencyObject parent = VisualTreeHelper.GetParent(CurrentButton);
             List<Button> list = this.FindVisualChildren<Button>(parent);
 
+            List<ComboBox> ComboBox_list = this.FindVisualChildren<ComboBox>(parent);
+
+            TypeOneValue = ComboBox_list[0].Text;
+
             Button RelatedButton = new Button();
 
             var RelatedButtonName = Param.Split('_')[0].ToString() + "_Close";
@@ -137,16 +129,13 @@ namespace ViewModel
             #endregion
 
 
-            //StartMonitoring();
+            StartMonitoring();
 
         }
 
         public void StartMonitoring()
         {
-
             parameterOne = tcClient.AddDeviceNotification(ParaOne, dataStream, AdsTransMode.OnChange, 100, 0, null);
-
-            parameterTwo = tcClient.AddDeviceNotification(ParaTwo, dataStream, AdsTransMode.OnChange, 100, 0, null);
 
             tcClient.AdsNotification += new AdsNotificationEventHandler(tcClient_OnNotification);
         }
@@ -161,18 +150,28 @@ namespace ViewModel
                 #region plcUpi
                 if (e.NotificationHandle == parameterOne)
                 {
-                    var hvar1 = tcClient.CreateVariableHandle("GVL_WCS.C47_FrWCS.UPI");
-                    var UpiValue = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
-                    ParameterOneValue += UpiValue + "/-/-/";
-                }
-                #endregion
+                    var hvar1 = tcClient.CreateVariableHandle(ParaOne);
 
-                #region UpiDataOk
-                if (e.NotificationHandle == parameterTwo)
-                {
-                    var hvar2 = tcClient.CreateVariableHandle("GVL_WCS.C47_ToWCS.UPI_OK");
-                    var UpiDataOkValue = (bool)(tcClient.ReadAny(hvar2, typeof(bool)));
-                    ParameterTwoValue += UpiDataOkValue + "/-/-/";
+                    var Value = string.Empty;
+                    switch (TypeOneValue)
+                    {
+                        case "String":
+                            Value = tcClient.ReadAny(hvar1, typeof(string), new int[] { 20 }).ToString();
+                            break;
+                        case "Bool":
+                            Value = ((bool)(tcClient.ReadAny(hvar1, typeof(bool)))).ToString();
+                            break;
+                        case "Int":
+                            Value = ((short)(tcClient.ReadAny(hvar1, typeof(short)))).ToString();
+                            break;
+                        case "Real":
+                            Value = ((float)(tcClient.ReadAny(hvar1, typeof(float)))).ToString();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    ParameterOneValue += Value + "/-/-/";
                 }
                 #endregion
             }
@@ -193,7 +192,7 @@ namespace ViewModel
 
         public void MonitorClose_Executed(object obj)
         {
-            Button CurrentButton = (Button)obj;
+            Button CurrentButton = (Button)obj; 
 
             string Param = CurrentButton.Name;
             CurrentButton.IsEnabled = false;
@@ -234,9 +233,6 @@ namespace ViewModel
             {
                 case "ParameterOneValue":
                     ParameterOneValue = string.Empty;
-                    break;
-                case "ParameterTwoValue":
-                    ParameterTwoValue = string.Empty;
                     break;
                 default:
                     break;
