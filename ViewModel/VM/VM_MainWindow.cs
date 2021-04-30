@@ -107,8 +107,8 @@ namespace ViewModel
                 if (e.NotificationHandle == UpiDataOk)
                 {
                     var hvar2 = tcClient.CreateVariableHandle("GVL_WCS.C47_ToWCS.UPI_OK");
-                    var UpiDataOk = (bool)(tcClient.ReadAny(hvar2, typeof(bool)));
-                    PlcDataOkValue += UpiDataOk + "/-/-/";
+                    var UpiDataOkValue = (bool)(tcClient.ReadAny(hvar2, typeof(bool)));
+                    PlcDataOkValue += UpiDataOkValue + "/-/-/";
                 }
                 #endregion
             }
@@ -117,5 +117,32 @@ namespace ViewModel
 
             }
         }
+
+        /// <summary>
+        /// Mian Page Clear Button Click Event
+        /// </summary>
+        public BaseCommand ClearCommand
+        {
+            get
+            {
+                return new BaseCommand(ClearCommand_Executed);
+            }
+        }
+
+        void ClearCommand_Executed(Object Parameter)
+        {
+            switch (Parameter.ToString())
+            {
+                case "Upi":
+                    PlcValue = string.Empty;
+                    break;
+                case "DataOk":
+                    PlcDataOkValue = string.Empty;
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }
