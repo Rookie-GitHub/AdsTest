@@ -8,21 +8,25 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TwinCAT.Ads;
+using System.Configuration;
+using Untility;
 
 namespace ViewModel
 {
     public class VM_MainWindow : VM_BaseViewModel
     {
+
+        private CommonHandle commonHandle;
+
+        #region 变量声明
+
         private static TcAdsClient tcClient;
 
         private AdsStream dataStream;
 
         int parameterOne;
 
-        int parameterTwo;
-
         string TypeOneValue;
-        string TypeTwoValue;
 
         private string _IP;
         public string IP
@@ -54,13 +58,24 @@ namespace ViewModel
             set { _parameterOneValue = value; OnPropertyChanged(); }
         }
 
+        List<string> PlcParas;
 
+        List<int> AdsParas;
+        #endregion
+
+        /// <summary>
+        /// 构造函数 constructor
+        /// </summary>
         public VM_MainWindow()
         {
-
+            commonHandle = new CommonHandle();
+            commonHandle.RemoveKeys("appSetting", "add");
             dataStream = new AdsStream(15);
         }
 
+        #region Command
+
+        #region ConnectCommand
         /// <summary>
         /// Mian Page Connect Button Click Event
         /// </summary>
@@ -87,7 +102,9 @@ namespace ViewModel
             }
         }
 
+        #endregion
 
+        #region MonitorOpenCommand
         public BaseCommand MonitorOpenCommand
         {
             get
@@ -130,8 +147,128 @@ namespace ViewModel
 
 
             StartMonitoring();
-
         }
+        #endregion
+
+        #region Close The Monitoring
+        public BaseCommand MonitorCloseCommand
+        {
+            get
+            {
+                return new BaseCommand(MonitorClose_Executed);
+            }
+        }
+
+        public void MonitorClose_Executed(object obj)
+        {
+            Button CurrentButton = (Button)obj;
+
+            string Param = CurrentButton.Name;
+            CurrentButton.IsEnabled = false;
+
+            DependencyObject parent = VisualTreeHelper.GetParent(CurrentButton);
+            List<Button> list = this.FindVisualChildren<Button>(parent);
+
+            Button RelatedButton = new Button();
+
+            var RelatedButtonName = Param.Split('_')[0].ToString() + "_Open";
+
+            foreach (var item in list)
+            {
+                if (item.Name == RelatedButtonName)
+                {
+                    RelatedButton = item;
+                }
+            }
+
+            RelatedButton.IsEnabled = true;
+        }
+        #endregion
+
+        #region ClearCommand
+        /// <summary>
+        /// Mian Page Clear Button Click Event
+        /// </summary>
+        public BaseCommand ClearCommand
+        {
+            get
+            {
+                return new BaseCommand(ClearCommand_Executed);
+            }
+        }
+
+        void ClearCommand_Executed(Object Parameter)
+        {
+            switch (Parameter.ToString())
+            {
+                case "ParameterOneValue":
+                    ParameterOneValue = string.Empty;
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+
+        #region AddPlcParaCommand
+        /// <summary>
+        /// Mian Page Clear Button Click Event
+        /// 
+        /// Add a new PlcPare for Monitor
+        /// </summary>
+        public BaseCommand AddPlcParaCommand
+        {
+            get
+            {
+                return new BaseCommand(AddPlcParaCommand_Executed);
+            }
+        }
+
+        void AddPlcParaCommand_Executed(Object Parameter)
+        {
+            if (string.IsNullOrWhiteSpace(ParaOne))
+            {
+                MessageBox.Show("Please fill in the parameter");
+                return;
+            }
+
+            Button CurrentButton = (Button)Parameter;
+
+            string Param = CurrentButton.Name;
+
+            DependencyObject parent = VisualTreeHelper.GetParent(CurrentButton);
+            List<Button> list = this.FindVisualChildren<Button>(parent);
+
+            List<ComboBox> ComboBox_list = this.FindVisualChildren<ComboBox>(parent);
+
+            TypeOneValue = ComboBox_list[0].Text;
+
+            if (string.IsNullOrWhiteSpace(TypeOneValue))
+            {
+                MessageBox.Show("Please choose the type of parameter");
+                return;
+            }
+
+            Button RelatedButton = new Button();
+
+            var RelatedButtonName = "Monitoring_Open";
+
+            foreach (var item in list)
+            {
+                if (item.Name == RelatedButtonName)
+                {
+                    RelatedButton = item;
+                }
+            }
+
+            RelatedButton.IsEnabled = true;
+
+            commonHandle.AddConfigKey(ParaOne, TypeOneValue);
+        }
+        #endregion
+
+        #endregion
+
 
         public void StartMonitoring()
         {
@@ -180,65 +317,6 @@ namespace ViewModel
 
             }
         }
-
-        #region Close The Monitoring
-        public BaseCommand MonitorCloseCommand
-        {
-            get
-            {
-                return new BaseCommand(MonitorClose_Executed);
-            }
-        }
-
-        public void MonitorClose_Executed(object obj)
-        {
-            Button CurrentButton = (Button)obj; 
-
-            string Param = CurrentButton.Name;
-            CurrentButton.IsEnabled = false;
-
-            DependencyObject parent = VisualTreeHelper.GetParent(CurrentButton);
-            List<Button> list = this.FindVisualChildren<Button>(parent);
-
-            Button RelatedButton = new Button();
-
-            var RelatedButtonName = Param.Split('_')[0].ToString() + "_Open";
-
-            foreach (var item in list)
-            {
-                if (item.Name == RelatedButtonName)
-                {
-                    RelatedButton = item;
-                }
-            }
-
-            RelatedButton.IsEnabled = true;
-        }
-        #endregion
-
-        /// <summary>
-        /// Mian Page Clear Button Click Event
-        /// </summary>
-        public BaseCommand ClearCommand
-        {
-            get
-            {
-                return new BaseCommand(ClearCommand_Executed);
-            }
-        }
-
-        void ClearCommand_Executed(Object Parameter)
-        {
-            switch (Parameter.ToString())
-            {
-                case "ParameterOneValue":
-                    ParameterOneValue = string.Empty;
-                    break;
-                default:
-                    break;
-            }
-        }
-
 
         #region 查找页面某部分子标签
         private List<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject

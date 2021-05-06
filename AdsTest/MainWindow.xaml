@@ -19,7 +19,7 @@
         <Button Content="Clear" Command="{Binding ClearCommand}" CommandParameter="ParameterOneValue" VerticalAlignment="Top" Width="75" Height="30" Margin="0,500,0,0"/>
         <TextBox x:Name="TB_ParaOne" Text="{Binding ParaOne, Mode=TwoWay}" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Margin="154,83,0,0" TextAlignment="Center" FontSize="15" VerticalContentAlignment="Center"/>
         <Label Content="Para" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="114,83,0,0" Height="30" Width="50"/>
-        <Button Name="Monitoring_Open" Content="Open" Command="{Binding MonitorOpenCommand}"  CommandParameter="{Binding RelativeSource={x:Static RelativeSource.Self}}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="214,133,0,0" Height="30"/>
+        <Button Name="Monitoring_Open" Content="Open" Command="{Binding MonitorOpenCommand}"  CommandParameter="{Binding RelativeSource={x:Static RelativeSource.Self}}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="214,133,0,0" Height="30" IsEnabled="False"/>
         <Button Name="Monitoring_Close" Content="Close" Command="{Binding MonitorCloseCommand}"  CommandParameter="{Binding RelativeSource={x:Static RelativeSource.Self}}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="464,133,0,0" Height="30" IsEnabled="False"/>
 
         <ComboBox Name="CB_TypeOne" VerticalAlignment="Top" Width="200" Height="30" Margin="404,83,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center">
@@ -29,5 +29,6 @@
             <ComboBoxItem Content="String" HorizontalAlignment="Left" Width="198.4"/>
         </ComboBox>
         <Label Content="Type" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="359,82,0,0" Height="30" Width="50"/>
+        <Button Content="Add" Command="{Binding AddPlcParaCommand}"  CommandParameter="{Binding RelativeSource={x:Static RelativeSource.Self}}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="654,83,0,0" Height="30"/>
     </Grid>
 </Window>
